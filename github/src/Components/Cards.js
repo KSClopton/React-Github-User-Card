@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 function Cards(props){
-    
+
     return (
         <div>
             <MainCard>
@@ -12,7 +12,7 @@ function Cards(props){
                 <ContentDiv>
                   <p>Username: {props.gitUsers.login}</p>  
                   <p>Followers: {props.gitUsers.followers}</p>  
-                  <button>Click to see followers</button>
+                  
                 </ContentDiv>
                 
             </MainCard>
@@ -23,7 +23,7 @@ function Cards(props){
 const MainCard = styled.div`
     height: 80%;
     margin: 1% 5%;
-    border: solid red 2px;
+    border: solid blue 2px;
     display: flex;
     flex-direction: column;
     justify-content: center;

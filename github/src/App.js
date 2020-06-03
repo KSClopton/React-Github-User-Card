@@ -3,6 +3,7 @@ import Cards from './Components/Cards'
 import axios from 'axios'
 import styled from 'styled-components'
 import GitHub from './Images/GitHub.png'
+import Followers from './Components/Followers'
 
 class App extends React.Component {
   constructor() {
@@ -11,17 +12,19 @@ class App extends React.Component {
       users: [],
       folowers: [],
       search: '',
-
+      getFollowers: []
+      
     }
   }
-  
+
   // LifeCycle Methods
   componentDidMount() {
     // fetch axios data
-    axios.get(`https://api.github.com/users/KSClopton`)
+    axios.get(`https://api.github.com/users/KSClopton/followers`)
     .then(data => {
       console.log(this.state.searchUser)
       console.log(this.search)
+      console.log(this.state.getFollowers)
       this.setState({
         users: data.data
       })
@@ -30,11 +33,14 @@ class App extends React.Component {
       console.log('axios request is not working!')
     })
   }
+  componentDidUpdate() {
+    console.log('It updated')
+  }
 
   getNewUser = (newUser) => {
       axios.get(`https://api.github.com/users/${newUser.searchUser}`)
       .then(data => {
-        console.log(this.state.searchUser)
+        console.log(`These are the followers:  ${this.state.searchUser}`)
         this.setState({
           users: data.data
         })})
@@ -42,19 +48,40 @@ class App extends React.Component {
         console.log('This search request is not working!')
       })
       }
+  getFollowers = (getFollows) => {
+    axios.get(`https://api.github.com/users/${getFollows.usersFollowers}/followers`)
+    .then(data => {
+      console.log(`These are the followers1:  ${data}`)
+      console.log(getFollows.searchUser)
+      this.setState({
+        getFollowers: data.data
+        
+      })
+    })
+  }
 
   onInputChange = e => {
     this.setState({
       search: e.target.value
     })}
+  
+ 
+
+  handleClick = e => {
+
+    const getFollows = {
+      usersFollowers: this.state.search.trim()
+    }
+    this.getFollowers(getFollows)
+  }
 
   handleSubmit = e => {
     e.preventDefault()
-    console.log(this.state.search)
+    
     const newUser = {
       searchUser: this.state.search.trim()
     }
-    console.log(`The person is: ${newUser}`)
+  
     this.getNewUser(newUser)
 
   }
@@ -80,7 +107,13 @@ class App extends React.Component {
           </SearchBar>
         </Container>
       </NavItems>
-      <Cards gitUsers={this.state.users}/>
+      <Cards gitUsers={this.state.users} />
+      <button onClick={this.handleClick}>Click to see followers!</button>
+      <GetFollowers>
+        {this.state.getFollowers.map(item => {
+          return <p>{item.login}</p>
+        })}
+      </GetFollowers>
     </div>
   );
   }}
@@ -91,7 +124,17 @@ const SearchBar = styled.div`
     background-color: rgb(45,45,54);
     color: grey;
   }
+`
+const GetFollowers = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 
+  p{
+
+    padding: 0 5%;
+
+  }
 
 `
 const Container = styled.div`
