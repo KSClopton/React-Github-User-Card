@@ -23,7 +23,6 @@ function Cards(props){
 const MainCard = styled.div`
     height: 80%;
     margin: 1% 5%;
-    border: solid blue 2px;
     display: flex;
     flex-direction: column;
     justify-content: center;
