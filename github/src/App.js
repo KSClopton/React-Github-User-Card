@@ -11,18 +11,17 @@ class App extends React.Component {
       users: [],
       folowers: [],
       search: '',
-      searchUser: ''
+
     }
   }
+  
   // LifeCycle Methods
-
-
   componentDidMount() {
     // fetch axios data
-    const getUser = this.state.searchUser
-    axios.get(`https://api.github.com/users/${getUser}`)
+    axios.get(`https://api.github.com/users/KSClopton`)
     .then(data => {
       console.log(this.state.searchUser)
+      console.log(this.search)
       this.setState({
         users: data.data
       })
@@ -32,20 +31,33 @@ class App extends React.Component {
     })
   }
 
-
-
-
-      onInputChange = e => {
+  getNewUser = (newUser) => {
+      axios.get(`https://api.github.com/users/${newUser.searchUser}`)
+      .then(data => {
+        console.log(this.state.searchUser)
         this.setState({
-          search: e.target.value
-        })
+          users: data.data
+        })})
+      .catch(err => {
+        console.log('This search request is not working!')
+      })
       }
-      handleClick = e => {
-        this.setState({
-          
-          searchUser: e.target.value
-        })
-      }
+
+  onInputChange = e => {
+    this.setState({
+      search: e.target.value
+    })}
+
+  handleSubmit = e => {
+    e.preventDefault()
+    console.log(this.state.search)
+    const newUser = {
+      searchUser: this.state.search.trim()
+    }
+    console.log(`The person is: ${newUser}`)
+    this.getNewUser(newUser)
+
+  }
 
   render() {
     return (
@@ -61,8 +73,10 @@ class App extends React.Component {
             <a>News</a>
           </nav>
           <SearchBar>
-            <input placeholder='Search for Users' type='text' value={this.state.serach} name='search' onChange={this.onInputChange}/>
-            <button onClick={this.handleClick}>Search</button>
+            <form onSubmit={this.handleSubmit}>
+              <input placeholder='Search for Users' type='text' value={this.state.serach} name='search' onChange={this.onInputChange}/>
+              <button>Search</button>
+            </form>
           </SearchBar>
         </Container>
       </NavItems>
